@@ -1,0 +1,101 @@
+
+Use Library;
+
+
+create Table Authors
+(
+	AuthorID int primary key ,
+	FirstName nvarchar(100) not null,
+	LastName nvarchar(100) not null
+)
+
+
+Create table Authors_Phone
+(
+	PhoneID int primary key,
+	Phone nvarchar(30) not null,
+	Author_ID int ,
+	constraint FK_AuthorID foreign key(Author_ID) references Authors(AuthorID)
+)
+
+
+
+create Table Books
+(
+	BookID int primary key,
+	Title nvarchar(max) not null,
+	ISBN bigint not null,
+	Gener nvarchar(100) not null,
+	PublicationDate Date null,
+	AdditionalDetails nvarchar(max) null
+)
+
+create table Book_Author
+(
+	ID int primary key,
+	Book_ID int,
+	Author_ID int,
+	constraint FK_BookID foreign key(Book_ID) references Books(BookID),
+	constraint FK_AuthorIDD foreign key(Author_ID) references Authors(AuthorID)
+)
+Alter table BookCopies
+Alter column BookID int Not null
+
+create TAble BookCopies
+(
+	CopyID int primary key,
+	Availiable char(1) null,
+	Borrowing char(1) null,
+	BookID int,
+	constraint FK_BoookID foreign key (BookID) references Books(BookID),
+	constraint CHK_BORandAVA check ((Availiable ='T'or Availiable='F') and (Borrowing ='T'or Borrowing='F'))
+)
+
+create Table Users
+(
+	ID int primary key,
+	FirstName nvarchar(100) not null,
+	LastName nvarchar(100) not null,
+	CardNumber bigint not null
+)
+
+create table UserPhones
+(
+	ID int primary key,
+	Phone nvarchar(30) not null,
+	UserID int not null,
+	constraint FK_UserIDD foreign key(UserID) references Users(ID)
+)
+
+create table Borrowing
+(
+	ID int primary key,
+	BorrowingDate date not null,
+	DueDate date null,
+	UserID int not null,
+	CopyID int not null
+	constraint FK_UserID foreign key(UserID) references Users(ID),
+	constraint FK_CopyID foreign key(CopyID) references BookCopies(CopyID)
+)
+
+create table Booking
+(
+	BookingID int primary key,
+	DateOfBooking date not null,
+	UserID int not null,
+	CopyID int not null
+	constraint FK_UserrID foreign key(UserID) references Users(ID),
+	constraint FK_CopyyID foreign key(CopyID) references BookCopies(CopyID)
+)
+	
+
+create table FinsManagment
+(
+	FineID int primary key,
+	FineAnount smallmoney not null,
+	BecauseOF nvarchar(max) not null,
+	UserID int not null,
+	constraint FK_UserrrID foreign key(UserID) references Users(ID)
+)
+
+exec sp_changedbowner 'sa'
